@@ -1,8 +1,8 @@
-# 🏨 Sistema de Gestión Hotelera - Arquitectura de Microservicios
+# Sistema de Gestión Hotelera - Arquitectura de Microservicios
 
 Sistema completo de gestión hotelera construido con arquitectura de microservicios usando FastAPI y SQLite.
 
-## 📋 Servicios
+## Servicios
 
 | Servicio | Puerto | Descripción | Endpoints |
 |----------|--------|-------------|-----------|
@@ -17,8 +17,7 @@ Sistema completo de gestión hotelera construido con arquitectura de microservic
 | Analytics Service | 8008 | Dashboard y estadísticas | 6 |
 
 **Total: ~60 endpoints**
-
-## 🚀 Inicio Rápido
+##  Inicio Rápido
 
 ### Instalación
 
@@ -60,7 +59,7 @@ Una vez ejecutados los servicios:
 - **Experience Service**: http://localhost:8007/docs
 - **Analytics Service**: http://localhost:8008/docs
 
-## 🔐 Autenticación
+## Autenticación
 
 El sistema usa JWT para autenticación. Para usar los endpoints protegidos:
 
@@ -72,7 +71,7 @@ El sistema usa JWT para autenticación. Para usar los endpoints protegidos:
 - **user**: Usuario estándar (puede hacer reservas, crear experiencias)
 - **admin**: Administrador (puede gestionar habitaciones, menú, ver todas las reservas)
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 micros_resort/
@@ -90,7 +89,7 @@ micros_resort/
 └── README.md
 ```
 
-## 🛠️ Stack Tecnológico
+##  Stack Tecnológico
 
 - **Framework**: FastAPI
 - **Base de Datos**: SQLite (una por microservicio)
@@ -99,7 +98,7 @@ micros_resort/
 - **Autenticación**: JWT
 - **Comunicación**: REST API
 
-## 📝 Ejemplos de Uso
+##  Ejemplos de Uso
 
 ### Registrar un usuario
 
@@ -130,11 +129,11 @@ curl -X POST http://localhost:8000/room_reservations/ \
   }'
 ```
 
-## 🔄 Comunicación entre Servicios
+##  Comunicación entre Servicios
 
 Los servicios se comunican a través del API Gateway, que enruta las peticiones al microservicio correspondiente.
 
-## 📊 Base de Datos
+## Base de Datos
 
 Cada microservicio tiene su propia base de datos SQLite:
 
@@ -143,7 +142,7 @@ Cada microservicio tiene su propia base de datos SQLite:
 - `room_service/database.db`
 - etc.
 
-## 🧪 Testing
+##  Testing
 
 ```powershell
 # Ejecutar tests de un servicio específico
@@ -151,12 +150,11 @@ cd auth_service
 pytest
 ```
 
-## 📄 Licencia
+##  Licencia
 
 MIT
 
-## 👥 Contribución
-
+##  Contribución
 1. Fork el proyecto
 2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
 3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
