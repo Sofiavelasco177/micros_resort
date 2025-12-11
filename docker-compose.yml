@@ -1,0 +1,235 @@
+version: '3.8'
+
+services:
+  # Auth Service
+  auth-service:
+    build:
+      context: .
+      dockerfile: auth_service/Dockerfile
+    container_name: auth-service
+    ports:
+      - "8001:8001"
+    environment:
+      - SERVICE_NAME=Auth Service
+      - SERVICE_PORT=8001
+      - DATABASE_URL=sqlite:///./data/auth.db
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-this}
+    volumes:
+      - auth-data:/app/data
+    networks:
+      - micros-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8001/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # User Service
+  user-service:
+    build:
+      context: .
+      dockerfile: user_service/Dockerfile
+    container_name: user-service
+    ports:
+      - "8002:8002"
+    environment:
+      - SERVICE_NAME=User Service
+      - SERVICE_PORT=8002
+      - DATABASE_URL=sqlite:///./data/users.db
+      - AUTH_SERVICE_URL=http://auth-service:8001
+    volumes:
+      - user-data:/app/data
+    networks:
+      - micros-network
+    depends_on:
+      - auth-service
+    restart: unless-stopped
+
+  # Room Service
+  room-service:
+    build:
+      context: .
+      dockerfile: room_service/Dockerfile
+    container_name: room-service
+    ports:
+      - "8003:8003"
+    environment:
+      - SERVICE_NAME=Room Service
+      - SERVICE_PORT=8003
+      - DATABASE_URL=sqlite:///./data/rooms.db
+      - AUTH_SERVICE_URL=http://auth-service:8001
+    volumes:
+      - room-data:/app/data
+    networks:
+      - micros-network
+    depends_on:
+      - auth-service
+    restart: unless-stopped
+
+  # Room Reservation Service
+  room-reservation-service:
+    build:
+      context: .
+      dockerfile: room_reservation_service/Dockerfile
+    container_name: room-reservation-service
+    ports:
+      - "8004:8004"
+    environment:
+      - SERVICE_NAME=Room Reservation Service
+      - SERVICE_PORT=8004
+      - DATABASE_URL=sqlite:///./data/room_reservations.db
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - ROOM_SERVICE_URL=http://room-service:8003
+      - USER_SERVICE_URL=http://user-service:8002
+    volumes:
+      - room-reservation-data:/app/data
+    networks:
+      - micros-network
+    depends_on:
+      - auth-service
+      - room-service
+      - user-service
+    restart: unless-stopped
+
+  # Restaurant Service
+  restaurant-service:
+    build:
+      context: .
+      dockerfile: restaurant_service/Dockerfile
+    container_name: restaurant-service
+    ports:
+      - "8005:8005"
+    environment:
+      - SERVICE_NAME=Restaurant Service
+      - SERVICE_PORT=8005
+      - DATABASE_URL=sqlite:///./data/restaurants.db
+      - AUTH_SERVICE_URL=http://auth-service:8001
+    volumes:
+      - restaurant-data:/app/data
+    networks:
+      - micros-network
+    depends_on:
+      - auth-service
+    restart: unless-stopped
+
+  # Restaurant Reservation Service
+  restaurant-reservation-service:
+    build:
+      context: .
+      dockerfile: restaurant_reservation_service/Dockerfile
+    container_name: restaurant-reservation-service
+    ports:
+      - "8006:8006"
+    environment:
+      - SERVICE_NAME=Restaurant Reservation Service
+      - SERVICE_PORT=8006
+      - DATABASE_URL=sqlite:///./data/restaurant_reservations.db
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - RESTAURANT_SERVICE_URL=http://restaurant-service:8005
+      - USER_SERVICE_URL=http://user-service:8002
+    volumes:
+      - restaurant-reservation-data:/app/data
+    networks:
+      - micros-network
+    depends_on:
+      - auth-service
+      - restaurant-service
+      - user-service
+    restart: unless-stopped
+
+  # Experience Service
+  experience-service:
+    build:
+      context: .
+      dockerfile: experience_service/Dockerfile
+    container_name: experience-service
+    ports:
+      - "8007:8007"
+    environment:
+      - SERVICE_NAME=Experience Service
+      - SERVICE_PORT=8007
+      - DATABASE_URL=sqlite:///./data/experiences.db
+      - AUTH_SERVICE_URL=http://auth-service:8001
+    volumes:
+      - experience-data:/app/data
+    networks:
+      - micros-network
+    depends_on:
+      - auth-service
+    restart: unless-stopped
+
+  # Analytics Service
+  analytics-service:
+    build:
+      context: .
+      dockerfile: analytics_service/Dockerfile
+    container_name: analytics-service
+    ports:
+      - "8008:8008"
+    environment:
+      - SERVICE_NAME=Analytics Service
+      - SERVICE_PORT=8008
+      - DATABASE_URL=sqlite:///./data/analytics.db
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - ROOM_SERVICE_URL=http://room-service:8003
+      - USER_SERVICE_URL=http://user-service:8002
+      - RESTAURANT_SERVICE_URL=http://restaurant-service:8005
+      - EXPERIENCE_SERVICE_URL=http://experience-service:8007
+    volumes:
+      - analytics-data:/app/data
+    networks:
+      - micros-network
+    depends_on:
+      - auth-service
+      - room-service
+      - user-service
+      - restaurant-service
+      - experience-service
+    restart: unless-stopped
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api_gateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - SERVICE_NAME=API Gateway
+      - SERVICE_PORT=8000
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - USER_SERVICE_URL=http://user-service:8002
+      - ROOM_SERVICE_URL=http://room-service:8003
+      - ROOM_RESERVATION_SERVICE_URL=http://room-reservation-service:8004
+      - RESTAURANT_SERVICE_URL=http://restaurant-service:8005
+      - RESTAURANT_RESERVATION_SERVICE_URL=http://restaurant-reservation-service:8006
+      - EXPERIENCE_SERVICE_URL=http://experience-service:8007
+      - ANALYTICS_SERVICE_URL=http://analytics-service:8008
+    networks:
+      - micros-network
+    depends_on:
+      - auth-service
+      - user-service
+      - room-service
+      - room-reservation-service
+      - restaurant-service
+      - restaurant-reservation-service
+      - experience-service
+      - analytics-service
+    restart: unless-stopped
+
+volumes:
+  auth-data:
+  user-data:
+  room-data:
+  room-reservation-data:
+  restaurant-data:
+  restaurant-reservation-data:
+  experience-data:
+  analytics-data:
+
+networks:
+  micros-network:
+    driver: bridge

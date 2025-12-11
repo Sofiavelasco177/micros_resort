@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -16,9 +16,7 @@ class Settings(BaseSettings):
     GATEWAY_PORT: int = 8000
     GATEWAY_NAME: str = "Hotel Management API Gateway"
     
-    class Config:
-        env_file = "../.env"
-        extra = "ignore"
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore", case_sensitive=False)
 
 
 settings = Settings()
