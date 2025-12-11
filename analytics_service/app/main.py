@@ -2,12 +2,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
 from .api.routes import router
+from .database.connection import init_db
 
 app = FastAPI(
     title=settings.SERVICE_NAME,
     version="1.0.0",
     description="Analytics Service for Hotel Management System"
 )
+
+# Inicializar base de datos al arrancar
+@app.on_event("startup")
+def startup_event():
+    init_db()
 
 # CORS configuration
 app.add_middleware(

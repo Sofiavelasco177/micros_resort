@@ -45,7 +45,7 @@ $services = @(
 foreach ($service in $services) {
     Write-Host "Iniciando $($service.Name) en puerto $($service.Port)..." -ForegroundColor Green
     
-    $command = "cd '$($service.Path)' ; uvicorn app.main:app --reload --port $($service.Port)"
+    $command = "cd '$($service.Path)' ; uvicorn app.main:app --reload --host 0.0.0.0 --port $($service.Port)"
     
     Start-Process powershell -ArgumentList "-NoExit", "-Command", $command -WindowStyle Normal
     
