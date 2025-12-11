@@ -1,6 +1,25 @@
-version: '3.8'
-
 services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: micros-postgres
+    environment:
+      - POSTGRES_USER=micros_user
+      - POSTGRES_PASSWORD=micros_password
+      - POSTGRES_DB=micros_resort
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - micros-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U micros_user -d micros_resort"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # Auth Service
   auth-service:
     build:
@@ -170,22 +189,27 @@ services:
     environment:
       - SERVICE_NAME=Analytics Service
       - SERVICE_PORT=8008
-      - DATABASE_URL=sqlite:///./data/analytics.db
+      - DATABASE_URL=postgresql://micros_user:micros_password@postgres:5432/micros_resort
       - AUTH_SERVICE_URL=http://auth-service:8001
       - ROOM_SERVICE_URL=http://room-service:8003
       - USER_SERVICE_URL=http://user-service:8002
       - RESTAURANT_SERVICE_URL=http://restaurant-service:8005
       - EXPERIENCE_SERVICE_URL=http://experience-service:8007
-    volumes:
-      - analytics-data:/app/data
     networks:
       - micros-network
     depends_on:
-      - auth-service
-      - room-service
-      - user-service
-      - restaurant-service
-      - experience-service
+      postgres:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+      room-service:
+        condition: service_started
+      user-service:
+        condition: service_started
+      restaurant-service:
+        condition: service_started
+      experience-service:
+        condition: service_started
     restart: unless-stopped
 
   # API Gateway
@@ -221,6 +245,7 @@ services:
     restart: unless-stopped
 
 volumes:
+  postgres-data:
   auth-data:
   user-data:
   room-data:

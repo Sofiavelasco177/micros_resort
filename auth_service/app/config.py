@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     
     # Database
-    DATABASE_URL: str = "sqlite:///./data/auth.db"
+    DATABASE_URL: str = "mysql+pymysql://root:@localhost:3306/micros_resort"
     
     # Service Info
     SERVICE_NAME: str = "Auth Service"

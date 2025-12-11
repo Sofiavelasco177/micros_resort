@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     
     # Database
-    DATABASE_URL: str = "sqlite:///./database.db"
+    DATABASE_URL: str = "mysql+pymysql://root:@localhost:3306/micros_resort"
     
     # Service Info
     SERVICE_NAME: str = "User Service"

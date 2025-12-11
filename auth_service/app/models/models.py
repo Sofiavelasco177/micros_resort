@@ -9,8 +9,8 @@ class AuthToken(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, nullable=False, index=True)
-    token = Column(String, unique=True, nullable=False, index=True)
-    refresh_token = Column(String, unique=True, index=True)
+    token = Column(String(500), unique=True, nullable=False, index=True)
+    refresh_token = Column(String(500), unique=True, index=True)
     expires_at = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     revoked = Column(Boolean, default=False)

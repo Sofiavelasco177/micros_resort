@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     SERVICE_PORT: int = 8007
     SECRET_KEY: str = "your-secret-key-change-this-in-production"
     ALGORITHM: str = "HS256"
-    DATABASE_URL: str = "sqlite:///./data/experiences.db"
+    DATABASE_URL: str = "mysql+pymysql://root:@localhost:3306/micros_resort"
     AUTH_SERVICE_URL: str = "http://auth-service:8001"
 
 

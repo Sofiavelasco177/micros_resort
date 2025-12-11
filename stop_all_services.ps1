@@ -14,15 +14,15 @@ foreach ($port in $ports) {
     if ($connections) {
         foreach ($connection in $connections) {
             $parts = $connection -split '\s+'
-            $pid = $parts[-1]
+            $processPid = $parts[-1]
             
-            if ($pid -and $pid -ne "0") {
-                $process = Get-Process -Id $pid -ErrorAction SilentlyContinue
+            if ($processPid -and $processPid -ne "0") {
+                $process = Get-Process -Id $processPid -ErrorAction SilentlyContinue
                 if ($process) {
-                    Write-Host "  Deteniendo proceso $($process.Name) (PID: $pid)" -ForegroundColor Green
-                    Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue
+                    Write-Host "  Deteniendo proceso $($process.Name) (PID: $processPid)" -ForegroundColor Green
+                    Stop-Process -Id $processPid -Force -ErrorAction SilentlyContinue
                 } else {
-                    Write-Host "  No se pudo detener proceso con PID: $pid" -ForegroundColor Yellow
+                    Write-Host "  No se pudo detener proceso con PID: $processPid" -ForegroundColor Yellow
                 }
             }
         }

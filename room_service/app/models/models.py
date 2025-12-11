@@ -9,8 +9,8 @@ class Room(Base):
     __tablename__ = "rooms"
     
     id = Column(Integer, primary_key=True, index=True)
-    room_number = Column(String, unique=True, nullable=False, index=True)
-    type = Column(String, nullable=False)  # single, double, suite, deluxe
+    room_number = Column(String(10), unique=True, nullable=False, index=True)
+    type = Column(String(50), nullable=False)  # single, double, suite, deluxe
     price_per_night = Column(Float, nullable=False)
     capacity = Column(Integer, nullable=False)
     description = Column(Text)
@@ -32,9 +32,9 @@ class RoomInventory(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     room_id = Column(Integer, ForeignKey("rooms.id"), nullable=False)
-    item_name = Column(String, nullable=False)
+    item_name = Column(String(100), nullable=False)
     quantity = Column(Integer, default=1)
-    condition = Column(String, default="good")  # good, fair, poor
+    condition = Column(String(20), default="good")  # good, fair, poor
     last_checked = Column(DateTime, default=datetime.utcnow)
     notes = Column(Text)
     

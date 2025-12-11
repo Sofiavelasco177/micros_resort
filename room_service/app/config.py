@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     
     SECRET_KEY: str = "tu-clave-secreta-muy-segura-cambiala-en-produccion"
     ALGORITHM: str = "HS256"
-    DATABASE_URL: str = "sqlite:///./data/rooms.db"
+    DATABASE_URL: str = "mysql+pymysql://root:@localhost:3306/micros_resort"
     SERVICE_NAME: str = "Room Service"
     SERVICE_PORT: int = 8003
     AUTH_SERVICE_URL: str = "http://auth-service:8001"

@@ -75,8 +75,8 @@ class ExperienceMetrics(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     experience_id = Column(Integer, nullable=False, index=True)
-    experience_name = Column(String, nullable=False)
-    category = Column(String, nullable=False)
+    experience_name = Column(String(200), nullable=False)
+    category = Column(String(50), nullable=False)
     total_bookings = Column(Integer, default=0)
     average_rating = Column(Float, default=0.0)
     total_revenue = Column(Float, default=0.0)
@@ -98,7 +98,7 @@ class SystemMetrics(Base):
     total_users = Column(Integer, default=0)
     total_restaurants = Column(Integer, default=0)
     total_experiences = Column(Integer, default=0)
-    system_health = Column(String, default="healthy")  # healthy, degraded, down
+    system_health = Column(String(20), default="healthy")  # healthy, degraded, down
     metadata = Column(JSON)  # Información adicional en formato JSON
     created_at = Column(DateTime, default=datetime.utcnow)
     

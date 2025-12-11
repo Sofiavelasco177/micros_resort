@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     
     SERVICE_NAME: str = "Analytics Service"
     SERVICE_PORT: int = 8008
-    DATABASE_URL: str = "sqlite:///./data/analytics.db"
+    DATABASE_URL: str = "mysql+pymysql://root:@localhost:3306/micros_resort"
     SECRET_KEY: str = "your-secret-key-change-this-in-production"
     ALGORITHM: str = "HS256"
     AUTH_SERVICE_URL: str = "http://auth-service:8001"

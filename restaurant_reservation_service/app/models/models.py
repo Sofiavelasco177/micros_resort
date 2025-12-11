@@ -12,6 +12,6 @@ class RestaurantReservation(Base):
     reservation_date = Column(Date, nullable=False)
     reservation_time = Column(Time, nullable=False)
     guests_count = Column(Integer, nullable=False)
-    status = Column(String, nullable=False, default="pending")  # pending, confirmed, cancelled, completed
-    special_requests = Column(String, nullable=True)
+    status = Column(String(20), nullable=False, default="pending")  # pending, confirmed, cancelled, completed
+    special_requests = Column(String(500), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
