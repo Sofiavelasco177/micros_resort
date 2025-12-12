@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     gcc \
     default-libmysqlclient-dev \
     pkg-config \
-    curl \
+    bash \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
@@ -21,8 +21,12 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy API Gateway code
 COPY api_gateway/app ./app
 
+# Copy startup script
+COPY start.sh .
+RUN chmod +x start.sh
+
 # Expose port
 EXPOSE 8000
 
 # Run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["bash", "start.sh"]
