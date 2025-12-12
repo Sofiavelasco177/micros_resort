@@ -1,9 +1,10 @@
 # Dockerfile principal para despliegue del API Gateway
 FROM python:3.12-slim
 
-WORKDIR /app
+# Set working directory
+WORKDIR /code
 
-# Install system dependencies (incluyendo cliente MySQL)
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
     default-libmysqlclient-dev \
@@ -11,19 +12,20 @@ RUN apt-get update && apt-get install -y \
     bash \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
+# Copy and install requirements
 COPY requirements.txt .
-
-# Install Python dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Copy API Gateway code
-COPY api_gateway/app ./app
+# Copy the entire api_gateway directory
+COPY api_gateway ./api_gateway
 
 # Copy startup script
 COPY start.sh .
 RUN chmod +x start.sh
+
+# Set Python path to find modules
+ENV PYTHONPATH=/code
 
 # Expose port
 EXPOSE 8000
